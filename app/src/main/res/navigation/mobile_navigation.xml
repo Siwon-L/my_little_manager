@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/scdFragment">
+    <fragment
+        android:id="@+id/scdFragment"
+        android:name="com.example.my_list.ScdFragment"
+        android:label="나의 스케줄"
+        tools:layout="@layout/fragment_scd" >
+        <action
+            android:id="@+id/action_scdFragment_to_scdEditeFragment"
+            app:destination="@id/scdEditeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subFragment"
+        android:name="com.example.my_list.SubFragment"
+        android:label="나의 구독정보"
+        tools:layout="@layout/fragment_sub" >
+        <action
+            android:id="@+id/action_subFragment_to_subEditeFragment"
+            app:destination="@id/subEditeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeFragment"
+        android:name="com.example.my_list.TakeFragment"
+        android:label="매일 챙겨야 할것"
+        tools:layout="@layout/fragment_take" >
+        <action
+            android:id="@+id/action_takeFragment_to_takeEditeFragment"
+            app:destination="@id/takeEditeFragment" />
+        <action
+            android:id="@+id/action_takeFragment_to_takeOneFragment"
+            app:destination="@id/takeOneFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/IDEditeFragment"
+        android:name="com.example.my_list.IDEditeFragment"
+        android:label="정보 입력"
+        tools:layout="@layout/fragment_i_d_edite" >
+        <action
+            android:id="@+id/action_IDEditeFragment_to_loginIDFragment"
+            app:destination="@id/loginIDFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginIDFragment"
+        android:name="com.example.my_list.LoginIDFragment"
+        android:label="나의 가입정보"
+        tools:layout="@layout/fragment_login_i_d" >
+        <action
+            android:id="@+id/action_loginIDFragment_to_IDEditeFragment"
+            app:destination="@id/IDEditeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subEditeFragment"
+        android:name="com.example.my_list.SubEditeFragment"
+        android:label="서비스 입력"
+        tools:layout="@layout/fragment_sub_edite" >
+        <action
+            android:id="@+id/action_subEditeFragment_to_subFragment"
+            app:destination="@id/subFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeOneFragment"
+        android:name="com.example.my_list.TakeOneFragment"
+        android:label="오늘 하루 챙겨야 할것"
+        tools:layout="@layout/fragment_take_one" >
+        <action
+            android:id="@+id/action_takeOneFragment_to_takeEditeFragment"
+            app:destination="@id/takeEditeFragment" />
+        <action
+            android:id="@+id/action_takeOneFragment_to_takeFragment"
+            app:destination="@id/takeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeEditeFragment"
+        android:name="com.example.my_list.TakeEditeFragment"
+        android:label="챙길물건"
+        tools:layout="@layout/fragment_take_edite" >
+        <action
+            android:id="@+id/action_takeEditeFragment_to_takeFragment"
+            app:destination="@id/takeFragment" />
+        <action
+            android:id="@+id/action_takeEditeFragment_to_takeOneFragment"
+            app:destination="@id/takeOneFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scdEditeFragment"
+        android:name="com.example.my_list.ScdEditeFragment"
+        android:label="스케줄 정보"
+        tools:layout="@layout/fragment_scd_edite" >
+        <action
+            android:id="@+id/action_scdEditeFragment_to_scdFragment"
+            app:destination="@id/scdFragment" />
+    </fragment>
+
+</navigation>

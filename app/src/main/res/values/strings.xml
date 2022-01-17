@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Personal information</string>
+    <string name="w_name">웹사이트</string>
+    <string name="login_id">로그인 ID</string>
+    <string name="passwd">비밀번호</string>
+    <string name="w_url">URL</string>
+
+    <string name="w_name_h">웹사이트 이름 입력</string>
+    <string name="login_id_h">로그인 ID 입력</string>
+    <string name="passwd_h">비밀번호 입력</string>
+    <string name="w_url_h">URL 입력</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
