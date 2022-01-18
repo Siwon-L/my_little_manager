@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -42,7 +45,7 @@ public class LoginIDFragment extends Fragment {
     private static final String ARG_PARAM4 = "url";
     private static final String ARG_PARAM5 = "index";
     private static final String ARG_PARAM6 = "id";
-    private SimpleAdapter mSAdapter;
+    private ListAdapter mSAdapter;
     private ArrayList<HashMap<String, String>> mListData;
     private int mISelectedID = 0;
     private int mID = 0;
@@ -58,6 +61,7 @@ public class LoginIDFragment extends Fragment {
     private SQLiteDatabase mDB;
     private DBHelper mdbHelper;
     private Snackbar snackbar;
+    private ItemTouchHelper helper;
 
 
     public LoginIDFragment() {
@@ -140,12 +144,24 @@ public class LoginIDFragment extends Fragment {
         final FloatingActionButton fadID = view.findViewById(R.id.IdB);
         final FloatingActionButton fadE = view.findViewById(R.id.EB);
         fadE.setVisibility(fadE.GONE);
+
         mListData = new ArrayList<>();
-        mSAdapter = new SimpleAdapter(getActivity(), mListData, R.layout.simple_list_item_activated_3, new String[]{"st", "loginid", "url"}, new int[]{R.id.text1, R.id.text2, R.id.text3});
+        mSAdapter = new ListAdapter(getContext());
         mRecyclerView = view.findViewById(R.id.RecyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mSAdapter);
-        mdbHelper = new DBHelper(getActivity());
-        loadTable();
+        HashMap<String, String> hitem = new HashMap<>();
+
+        hitem.put("item1","이시원");
+        hitem.put("item2","111");
+        hitem.put("item3","aaa");
+        mSAdapter.addItem(hitem);
+        helper = new ItemTouchHelper(new ItemTouchHelperCallback(mSAdapter));
+        helper.attachToRecyclerView(mRecyclerView);
+
+//        mdbHelper = new DBHelper(getActivity());
+//        loadTable();
 
 //        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //
@@ -191,68 +207,76 @@ public class LoginIDFragment extends Fragment {
 //
 //            }
 //        });
+//
+//
+//        fadID.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Bundle bundle = new Bundle();
+//
+//                bundle.putInt("index", -1);
+//                bundle.putInt("id", 0);
+//                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
+//
+//            }
+//        });
+//        fadE.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                HashMap<String, String> item = (HashMap<String, String>) mSAdapter.getItem(mISelectedItem);
+//                Bundle bundle = new Bundle();
+//
+//                bundle.putString("st", item.get("st"));
+//                bundle.putString("loginid", item.get("loginid"));
+//                bundle.putString("pwd", item.get("pwd"));
+//                bundle.putString("url", item.get("url"));
+//                bundle.putInt("index", mISelectedItem);
+//                bundle.putInt("id", mISelectedID);
+//                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
+//            }
+//        });
+//
+//
+//        if (mParam1 != null) {
+//            int item = mISelectedItem;
+//            HashMap<String, String> hitem = new HashMap<>();
+//            hitem.put("st", mParam1);
+//            hitem.put("loginid", mParam2);
+//            hitem.put("pwd", mParam3);
+//            hitem.put("url", mParam4);
+//            ContentValues values = new ContentValues();
+//            values.put(DBContract.COL_NAME, mParam1);
+//            values.put(DBContract.COL_LID, mParam2);
+//            values.put(DBContract.COL_PWD, mParam3);
+//            values.put(DBContract.COL_URL, mParam4);//인텐트를 통해 넘겨받아서  ContentValues  values객체에 저장
+//
+//            mDB = mdbHelper.getWritableDatabase();//조회가 아닌 인서트하고 없데이트 할수있는 메소드
+//            if (item == -1) {/*만약 아이템값이 -1 이면 추가하는경우*/
+//                values.put(DBContract.COL_ID, ++/*가장큰값보다 하나더증가시켜 저장*/mID);
+//                hitem.put("id", String.valueOf(mID));
+//                mDB.insert(DBContract.TABLE_NAME, null, values);
+//                mListData.add(hitem);
+//                Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
+//            } else {
+//                hitem.put("id", String.valueOf(mISelectedID));
+//
+//                mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
+//                mListData.set(item, hitem);
+//            }
+//            mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
+//
+//        }
+//        mParam1 = null;
 
-
-        fadID.setOnClickListener(new View.OnClickListener() {
+    }
+    private void setUpRecyclerView(){
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-
-                bundle.putInt("index", -1);
-                bundle.putInt("id", 0);
-                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
-
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.onDraw(c, parent, state);
             }
         });
-        fadE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HashMap<String, String> item = (HashMap<String, String>) mSAdapter.getItem(mISelectedItem);
-                Bundle bundle = new Bundle();
-
-                bundle.putString("st", item.get("st"));
-                bundle.putString("loginid", item.get("loginid"));
-                bundle.putString("pwd", item.get("pwd"));
-                bundle.putString("url", item.get("url"));
-                bundle.putInt("index", mISelectedItem);
-                bundle.putInt("id", mISelectedID);
-                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
-            }
-        });
-
-
-        if (mParam1 != null) {
-            int item = mISelectedItem;
-            HashMap<String, String> hitem = new HashMap<>();
-            hitem.put("st", mParam1);
-            hitem.put("loginid", mParam2);
-            hitem.put("pwd", mParam3);
-            hitem.put("url", mParam4);
-            ContentValues values = new ContentValues();
-            values.put(DBContract.COL_NAME, mParam1);
-            values.put(DBContract.COL_LID, mParam2);
-            values.put(DBContract.COL_PWD, mParam3);
-            values.put(DBContract.COL_URL, mParam4);//인텐트를 통해 넘겨받아서  ContentValues  values객체에 저장
-
-            mDB = mdbHelper.getWritableDatabase();//조회가 아닌 인서트하고 없데이트 할수있는 메소드
-            if (item == -1) {/*만약 아이템값이 -1 이면 추가하는경우*/
-                values.put(DBContract.COL_ID, ++/*가장큰값보다 하나더증가시켜 저장*/mID);
-                hitem.put("id", String.valueOf(mID));
-                mDB.insert(DBContract.TABLE_NAME, null, values);
-                mListData.add(hitem);
-                Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
-            } else {
-                hitem.put("id", String.valueOf(mISelectedID));
-
-                mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
-                mListData.set(item, hitem);
-            }
-            mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
-
-        }
-        mParam1 = null;
-
     }
 
     @Override

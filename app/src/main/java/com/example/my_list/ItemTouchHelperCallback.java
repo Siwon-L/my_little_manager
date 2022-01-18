@@ -156,7 +156,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 swipeBack = false;
                 if (listener != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
                     if (buttonsShowedState == ButtonsState.LEFT_VISIBLE) {
-                        listener.onLeftClick(viewHolder.getAdapterPosition(), viewHolder);
+//                        listener.onLeftClick();
                     } else if (buttonsShowedState == ButtonsState.RIGHT_VISIBLE) {
                         listener.onRightClick(viewHolder.getAdapterPosition(), viewHolder);
                     }
