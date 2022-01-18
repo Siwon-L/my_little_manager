@@ -100,7 +100,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         }
 
         public void onBind(HashMap<String, String> hm) {
-            list1.setText("sss");
+            list1.setText(hm.get("text1"));
             list2.setText(hm.get("text2"));
             list3.setText(hm.get("text3"));
         }
