@@ -154,7 +154,7 @@ public class LoginIDFragment extends Fragment {
         HashMap<String, String> hitem = new HashMap<>();
 
         hitem.put("item1","이시원");
-        hitem.put("item2","111");
+        hitem.put("item2","11");
         hitem.put("item3","aaa");
         mSAdapter.addItem(hitem);
         helper = new ItemTouchHelper(new ItemTouchHelperCallback(mSAdapter));
