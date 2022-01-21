@@ -145,20 +145,25 @@ public class LoginIDFragment extends Fragment {
         final FloatingActionButton fadE = view.findViewById(R.id.EB);
         fadE.setVisibility(fadE.GONE);
 
-        mListData = new ArrayList<>();
+
         mSAdapter = new ListAdapter(getContext());
+        HashMap<String, String> hitem1 = new HashMap<>();
+
+        hitem1.put("item1","이시원");
+        hitem1.put("item2","111");
+        hitem1.put("item3","aaa");
+        mSAdapter.addItem(hitem1);
         mRecyclerView = view.findViewById(R.id.RecyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setAdapter(mSAdapter);
-        HashMap<String, String> hitem = new HashMap<>();
 
-        hitem.put("item1","이시원");
-        hitem.put("item2","111");
-        hitem.put("item3","aaa");
-        mSAdapter.addItem(hitem);
+
         helper = new ItemTouchHelper(new ItemTouchHelperCallback(mSAdapter));
         helper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setAdapter(mSAdapter);
+
+
+
 
 //        mdbHelper = new DBHelper(getActivity());
 //        loadTable();
@@ -209,65 +214,93 @@ public class LoginIDFragment extends Fragment {
 //        });
 //
 //
-//        fadID.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Bundle bundle = new Bundle();
-//
-//                bundle.putInt("index", -1);
-//                bundle.putInt("id", 0);
-//                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
-//
-//            }
-//        });
+        fadID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+
+                bundle.putInt("index", -1);
+                bundle.putInt("id", 0);
+                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
+
+            }
+        });
 //        fadE.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
-//                HashMap<String, String> item = (HashMap<String, String>) mSAdapter.getItem(mISelectedItem);
-//                Bundle bundle = new Bundle();
 //
-//                bundle.putString("st", item.get("st"));
-//                bundle.putString("loginid", item.get("loginid"));
-//                bundle.putString("pwd", item.get("pwd"));
-//                bundle.putString("url", item.get("url"));
-//                bundle.putInt("index", mISelectedItem);
-//                bundle.putInt("id", mISelectedID);
-//                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
-//            }
 //        });
 //
 //
-//        if (mParam1 != null) {
-//            int item = mISelectedItem;
-//            HashMap<String, String> hitem = new HashMap<>();
-//            hitem.put("st", mParam1);
-//            hitem.put("loginid", mParam2);
-//            hitem.put("pwd", mParam3);
-//            hitem.put("url", mParam4);
-//            ContentValues values = new ContentValues();
-//            values.put(DBContract.COL_NAME, mParam1);
-//            values.put(DBContract.COL_LID, mParam2);
-//            values.put(DBContract.COL_PWD, mParam3);
-//            values.put(DBContract.COL_URL, mParam4);//인텐트를 통해 넘겨받아서  ContentValues  values객체에 저장
-//
+        mSAdapter.setOnItemClicklistener(new ItemTouchHelperListener() {
+            @Override
+            public boolean onItemMove(int from_position, int to_position) {
+                return false;
+            }
+
+            @Override
+            public void onItemSwipe(int position) {
+
+            }
+
+            @Override
+            public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder holder, View view, int position) {
+
+                HashMap<String, String> item =mSAdapter.getItem(position);
+                Bundle bundle = new Bundle();
+
+                bundle.putString("st", item.get("item1"));
+                bundle.putString("loginid", item.get("item2"));
+                bundle.putString("pwd", item.get("pwd"));
+                bundle.putString("url", item.get("item3"));
+                bundle.putInt("index", position);
+                bundle.putInt("id", mISelectedID);
+                NavHostFragment.findNavController(LoginIDFragment.this).navigate(R.id.action_loginIDFragment_to_IDEditeFragment, bundle);
+
+
+            }
+
+            @Override
+            public void onFinish(int position, HashMap<String, String> hm) {
+
+            }
+        });
+        if (mParam1 != null) {
+            int item = mISelectedItem;
+            HashMap<String, String> hitem = new HashMap<>();
+            hitem.put("item1", mParam1);
+            hitem.put("item2", mParam2);
+            hitem.put("pwd", mParam3);
+            hitem.put("item3", mParam4);
+            ContentValues values = new ContentValues();
+            values.put(DBContract.COL_NAME, mParam1);
+            values.put(DBContract.COL_LID, mParam2);
+            values.put(DBContract.COL_PWD, mParam3);
+            values.put(DBContract.COL_URL, mParam4);//인텐트를 통해 넘겨받아서  ContentValues  values객체에 저장
+
 //            mDB = mdbHelper.getWritableDatabase();//조회가 아닌 인서트하고 없데이트 할수있는 메소드
-//            if (item == -1) {/*만약 아이템값이 -1 이면 추가하는경우*/
-//                values.put(DBContract.COL_ID, ++/*가장큰값보다 하나더증가시켜 저장*/mID);
-//                hitem.put("id", String.valueOf(mID));
+            if (item == -1) {/*만약 아이템값이 -1 이면 추가하는경우*/
+                values.put(DBContract.COL_ID, ++/*가장큰값보다 하나더증가시켜 저장*/mID);
+                hitem.put("id", String.valueOf(mID));
 //                mDB.insert(DBContract.TABLE_NAME, null, values);
-//                mListData.add(hitem);
-//                Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
-//            } else {
-//                hitem.put("id", String.valueOf(mISelectedID));
-//
-//                mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
-//                mListData.set(item, hitem);
-//            }
-//            mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
-//
-//        }
-//        mParam1 = null;
+                mSAdapter.addItem(hitem);
+
+                Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
+            } else {
+                hitem.put("id", String.valueOf(mISelectedID));
+
+                //mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
+                mListData.set(item, hitem);
+            }
+            mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
+
+        }
+        mParam1 = null;
 
     }
     private void setUpRecyclerView(){

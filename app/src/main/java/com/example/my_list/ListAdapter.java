@@ -1,32 +1,27 @@
 package com.example.my_list;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.my_list.ItemTouchHelperListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static androidx.recyclerview.widget.RecyclerView.*;
 
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder> implements ItemTouchHelperListener {
     ArrayList<HashMap<String, String>> items = new ArrayList<>();
     Context context;
-    private AdapterView.OnItemClickListener mListener = null;
+    private AdapterView.OnItemClickListener mListener;
+    ItemTouchHelperListener listener;
+
 
     public ListAdapter(Context context) {
         this.context = context;
@@ -70,14 +65,28 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         items.remove(position);
         notifyItemRemoved(position);
     }
-    //왼쪽 버튼 누르면 수정할 다이얼로그 띄우기
-    @Override
-    public void onLeftClick(AdapterView.OnItemClickListener listener) { //수정 버튼 클릭시 다이얼로그 생성
-        this.mListener = listener ;
-    } //오른쪽 버튼 누르면 아이템 삭제
+
+
+    public void setOnItemClicklistener(ItemTouchHelperListener listener) {
+        this.listener = listener;
+    }
+    public HashMap<String, String> getItem(int position){
+        return items.get(position);
+    }
 
     @Override
-    public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
+    public void onItemClick(RecyclerView.ViewHolder holder, View view, int position) {
+        if (listener != null) {
+            listener.onItemClick(holder, view, position);
+        }
+    }
+
+
+
+    //오른쪽 버튼 누르면 아이템 삭제
+
+    @Override
+    public void onRightClick(int position, ViewHolder viewHolder) {
         items.remove(position);
         notifyItemRemoved(position);
     }
@@ -88,7 +97,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
         notifyItemChanged(position);
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder {
+    class ItemViewHolder extends ViewHolder {
         TextView list1, list2, list3;
 
 
@@ -97,12 +106,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
             list1 = itemView.findViewById(R.id.text1);
             list2 = itemView.findViewById(R.id.text2);
             list3 = itemView.findViewById(R.id.text3);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null) {
+                        listener.onItemClick(ItemViewHolder.this, v, position);
+                    }
+                }
+            });
         }
 
         public void onBind(HashMap<String, String> hm) {
-            list1.setText(hm.get("text1"));
-            list2.setText(hm.get("text2"));
-            list3.setText(hm.get("text3"));
+            list1.setText(hm.get("item1"));
+            list2.setText(hm.get("item2"));
+            list3.setText(hm.get("item3"));
+
         }
     }
 }

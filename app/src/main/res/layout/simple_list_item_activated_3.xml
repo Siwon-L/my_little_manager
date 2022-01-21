@@ -4,7 +4,6 @@
     android:paddingVertical="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F38181"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="vertical"
     >
