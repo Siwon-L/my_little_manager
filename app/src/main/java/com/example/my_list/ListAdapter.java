@@ -89,6 +89,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
     public void onRightClick(int position, ViewHolder viewHolder) {
         items.remove(position);
         notifyItemRemoved(position);
+        if (listener != null) {
+            listener.onRightClick(position, viewHolder);
+        }
     }
 
     @Override

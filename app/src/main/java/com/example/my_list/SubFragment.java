@@ -151,9 +151,10 @@ public class SubFragment extends Fragment {
                     fadInfo.setVisibility(fadInfo.VISIBLE);
                     mISelectedItem = i;//인덱스 저장
                     HashMap<String, String> item = ((HashMap<String, String>/*타입변환*/) mSAdapter.getItem(i));/*Object*/
-                    Toast.makeText(getActivity(), item.get("amount"), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), item.get("amount"), Toast.LENGTH_LONG).show();
 
                     mISelectedID = Integer.parseInt(item.get("id"));
+
 
                     snackbar = Snackbar.make(view, item.get("st")+"항목이 선택되었습니다", Snackbar.LENGTH_LONG)
                             .setAction("삭제", new View.OnClickListener() {

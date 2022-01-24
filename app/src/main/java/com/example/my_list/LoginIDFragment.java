@@ -109,7 +109,7 @@ public class LoginIDFragment extends Fragment {
 
     private void loadTable() {
         mDB = mdbHelper.getReadableDatabase();
-        mListData.clear();
+        //mListData.clear();
 
         Cursor cursor = mDB.rawQuery(DBContract.SQL_LOAD, null);
         while (cursor.moveToNext()) {
@@ -118,11 +118,11 @@ public class LoginIDFragment extends Fragment {
             mID = Math.max(mID/*지금까지 읽어온 레코드중 가장 큰값*/, nID/*현재 읽어온 레코드의 아이디값*/);
             if (cursor.getString(1) != "") {
                 hitem.put("id", String.valueOf(nID));
-                hitem.put("st", cursor.getString(1));
-                hitem.put("loginid", cursor.getString(2));
+                hitem.put("item1", cursor.getString(1));
+                hitem.put("item2", cursor.getString(2));
                 hitem.put("pwd", cursor.getString(3));
-                hitem.put("url", cursor.getString(4));
-                mListData.add(hitem);
+                hitem.put("item3", cursor.getString(4));
+                mSAdapter.addItem(hitem);
             }
 
 
@@ -147,12 +147,8 @@ public class LoginIDFragment extends Fragment {
 
 
         mSAdapter = new ListAdapter(getContext());
-        HashMap<String, String> hitem1 = new HashMap<>();
 
-        hitem1.put("item1","이시원");
-        hitem1.put("item2","111");
-        hitem1.put("item3","aaa");
-        mSAdapter.addItem(hitem1);
+
         mRecyclerView = view.findViewById(R.id.RecyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(manager);
@@ -165,8 +161,8 @@ public class LoginIDFragment extends Fragment {
 
 
 
-//        mdbHelper = new DBHelper(getActivity());
-//        loadTable();
+        mdbHelper = new DBHelper(getActivity());
+        loadTable();
 
 //        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //
@@ -226,12 +222,7 @@ public class LoginIDFragment extends Fragment {
 
             }
         });
-//        fadE.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//
-//        });
-//
-//
+
         mSAdapter.setOnItemClicklistener(new ItemTouchHelperListener() {
             @Override
             public boolean onItemMove(int from_position, int to_position) {
@@ -241,10 +232,18 @@ public class LoginIDFragment extends Fragment {
             @Override
             public void onItemSwipe(int position) {
 
+
+
+
             }
 
             @Override
             public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
+                HashMap<String, String> item =  mSAdapter.getItem(position);/*Object*/
+                mISelectedID = Integer.parseInt(item.get("id"));
+                mDB.delete(DBContract.TABLE_NAME, "id=" + mISelectedID, null);
+                mSAdapter.notifyDataSetChanged();
+                mISelectedItem = -1;
 
             }
 
@@ -253,6 +252,7 @@ public class LoginIDFragment extends Fragment {
 
                 HashMap<String, String> item =mSAdapter.getItem(position);
                 Bundle bundle = new Bundle();
+
 
                 bundle.putString("st", item.get("item1"));
                 bundle.putString("loginid", item.get("item2"));
@@ -283,19 +283,19 @@ public class LoginIDFragment extends Fragment {
             values.put(DBContract.COL_PWD, mParam3);
             values.put(DBContract.COL_URL, mParam4);//인텐트를 통해 넘겨받아서  ContentValues  values객체에 저장
 
-//            mDB = mdbHelper.getWritableDatabase();//조회가 아닌 인서트하고 없데이트 할수있는 메소드
+            mDB = mdbHelper.getWritableDatabase();//조회가 아닌 인서트하고 없데이트 할수있는 메소드
             if (item == -1) {/*만약 아이템값이 -1 이면 추가하는경우*/
                 values.put(DBContract.COL_ID, ++/*가장큰값보다 하나더증가시켜 저장*/mID);
                 hitem.put("id", String.valueOf(mID));
-//                mDB.insert(DBContract.TABLE_NAME, null, values);
+                mDB.insert(DBContract.TABLE_NAME, null, values);
                 mSAdapter.addItem(hitem);
 
                 Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
             } else {
                 hitem.put("id", String.valueOf(mISelectedID));
 
-                //mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
-                mListData.set(item, hitem);
+                mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
+                //mListData.set(item, hitem);
             }
             mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
 
