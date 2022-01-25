@@ -109,7 +109,7 @@ public class LoginIDFragment extends Fragment {
 
     private void loadTable() {
         mDB = mdbHelper.getReadableDatabase();
-        //mListData.clear();
+        mSAdapter.itemClear();
 
         Cursor cursor = mDB.rawQuery(DBContract.SQL_LOAD, null);
         while (cursor.moveToNext()) {
@@ -239,11 +239,12 @@ public class LoginIDFragment extends Fragment {
 
             @Override
             public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
-                HashMap<String, String> item =  mSAdapter.getItem(position);/*Object*/
-                mISelectedID = Integer.parseInt(item.get("id"));
-                mDB.delete(DBContract.TABLE_NAME, "id=" + mISelectedID, null);
+
+                mISelectedID = Integer.parseInt(/*item.get("id")*/mSAdapter.getItem(position).get("id"));
+                mDB.delete(DBContract.TABLE_NAME, "id=" + (mISelectedID), null);
                 mSAdapter.notifyDataSetChanged();
                 mISelectedItem = -1;
+
 
             }
 
@@ -252,7 +253,9 @@ public class LoginIDFragment extends Fragment {
 
                 HashMap<String, String> item =mSAdapter.getItem(position);
                 Bundle bundle = new Bundle();
-
+                String a= String.valueOf(Integer.parseInt(item.get("id")));
+                Toast.makeText(getActivity(),a,Toast.LENGTH_SHORT).show();
+                mISelectedItem=position;
 
                 bundle.putString("st", item.get("item1"));
                 bundle.putString("loginid", item.get("item2"));
@@ -296,6 +299,7 @@ public class LoginIDFragment extends Fragment {
 
                 mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
                 //mListData.set(item, hitem);
+                mSAdapter.Set(item,hitem);
             }
             mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
 

@@ -45,6 +45,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
     public int getItemCount() {
         return items.size();
     }
+    public void itemClear(){
+        items.clear();
+    }
+    public void Set(int p ,HashMap<String, String> hm){
+        items.set(p,hm);
+    }
 
     public void addItem(HashMap<String, String> hm) {
         items.add(hm);
@@ -87,10 +93,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ItemViewHolder
 
     @Override
     public void onRightClick(int position, ViewHolder viewHolder) {
-        items.remove(position);
-        notifyItemRemoved(position);
         if (listener != null) {
             listener.onRightClick(position, viewHolder);
+            items.remove(position);
+            notifyItemRemoved(position);
         }
     }
 
