@@ -46,7 +46,6 @@ public class LoginIDFragment extends Fragment {
     private static final String ARG_PARAM5 = "index";
     private static final String ARG_PARAM6 = "id";
     private ListAdapter mSAdapter;
-    private ArrayList<HashMap<String, String>> mListData;
     private int mISelectedID = 0;
     private int mID = 0;
     private int mISelectedItem = -1;
@@ -56,8 +55,6 @@ public class LoginIDFragment extends Fragment {
     private String mParam2;
     private String mParam3;
     private String mParam4;
-    private int mParam5;
-    private int mParam6;
     private SQLiteDatabase mDB;
     private DBHelper mdbHelper;
     private Snackbar snackbar;
@@ -164,52 +161,7 @@ public class LoginIDFragment extends Fragment {
         mdbHelper = new DBHelper(getActivity());
         loadTable();
 
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @SuppressLint("WrongConstant")
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-//                if (i != mISelectedItem) {
-//                    fadID.setVisibility(fadID.GONE);
-//                    fadE.setVisibility(fadE.VISIBLE);
-//                    mISelectedItem = i;//인덱스 저장
-//                    HashMap<String, String> item = ((HashMap<String, String>/*타입변환*/) mSAdapter.getItem(i));/*Object*/
-//                    Toast.makeText(getActivity(), item.get("pwd"), Toast.LENGTH_LONG).show();
-//
-//                    mISelectedID = Integer.parseInt(item.get("id"));
-//
-//                    snackbar = Snackbar.make(view, item.get("st") + "항목이 선택되었습니다", Snackbar.LENGTH_LONG)
-//                            .setAction("삭제", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//
-//                                    mListData.remove(i);
-//                                    mDB.delete(DBContract.TABLE_NAME, "id=" + mISelectedID, null);
-//                                    mSAdapter.notifyDataSetChanged();
-//                                    fadID.setVisibility(fadID.VISIBLE);
-//                                    fadE.setVisibility(fadE.GONE);
-//                                    mISelectedItem = -1;
-//
-//
-//                                }
-//                            });
-//                    snackbar.show();
-//
-//                } else {
-//                    fadID.setVisibility(fadID.VISIBLE);
-//                    fadE.setVisibility(fadE.GONE);
-//                    mISelectedItem = -1;
-//                    mISelectedID = 0;
-//                    snackbar.dismiss();
-//
-//
-//                }
-//
-//
-//            }
-//        });
-//
-//
+
         fadID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,7 +193,7 @@ public class LoginIDFragment extends Fragment {
             public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
 
                 mISelectedID = Integer.parseInt(/*item.get("id")*/mSAdapter.getItem(position).get("id"));
-                mDB.delete(DBContract.TABLE_NAME, "id=" + (mISelectedID), null);
+                mDB.delete(DBContract.TABLE_NAME, "id=" + mISelectedID, null);
                 mSAdapter.notifyDataSetChanged();
                 mISelectedItem = -1;
 
@@ -253,8 +205,8 @@ public class LoginIDFragment extends Fragment {
 
                 HashMap<String, String> item =mSAdapter.getItem(position);
                 Bundle bundle = new Bundle();
-                String a= String.valueOf(Integer.parseInt(item.get("id")));
-                Toast.makeText(getActivity(),a,Toast.LENGTH_SHORT).show();
+                mISelectedID=Integer.parseInt(item.get("id"));
+
                 mISelectedItem=position;
 
                 bundle.putString("st", item.get("item1"));
@@ -293,13 +245,14 @@ public class LoginIDFragment extends Fragment {
                 mDB.insert(DBContract.TABLE_NAME, null, values);
                 mSAdapter.addItem(hitem);
 
-                Toast.makeText(getActivity(), "추가", Toast.LENGTH_LONG).show();
+
             } else {
+
                 hitem.put("id", String.valueOf(mISelectedID));
 
                 mDB.update(DBContract.TABLE_NAME, values, "id=" + mISelectedID, null);
-                //mListData.set(item, hitem);
                 mSAdapter.Set(item,hitem);
+
             }
             mSAdapter.notifyDataSetChanged();/*수정이 적용될수있도록*/
 
@@ -307,14 +260,14 @@ public class LoginIDFragment extends Fragment {
         mParam1 = null;
 
     }
-    private void setUpRecyclerView(){
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.onDraw(c, parent, state);
-            }
-        });
-    }
+//    private void setUpRecyclerView(){
+//        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+//            @Override
+//            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+//                super.onDraw(c, parent, state);
+//            }
+//        });
+//    }
 
     @Override
     public void onDestroy() {
